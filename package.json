@@ -19,7 +19,10 @@
     "browser",
     "testing"
   ],
-  "author": "",
+  "author": {
+    "name": "dark1zinn",
+    "email": "edilsonjuininho154@gmail.com"
+  },
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^29.5.0",
