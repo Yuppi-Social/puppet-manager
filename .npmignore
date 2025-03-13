@@ -12,6 +12,7 @@ src
 .gitignore
 LICENSE
 package-lock.json
+LICENSE
 
 coverage
 .env
