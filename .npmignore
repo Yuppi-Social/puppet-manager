@@ -4,6 +4,14 @@ bun.lock
 tsconfig.json
 tsup.config.ts
 src
+/tests
+/.github
+/.vscode
+/.git
+/.turbo
+.gitignore
+LICENSE
+package-lock.json
 
 coverage
 .env
