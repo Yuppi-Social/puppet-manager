@@ -1,4 +1,4 @@
-import { Browser } from 'puppeteer';
+import type { Browser, LaunchOptions } from 'puppeteer';
 
 export type BrowserInstance = Browser | null;
 export type TimerId = ReturnType<typeof setInterval>;
@@ -9,4 +9,9 @@ export interface BrowserManagerState {
   browsers: BrowserInstance[];
   timerId: TimerId[];
   timeToLive: number[];
+}
+
+export interface PuppetManagerOptions {
+  browserOptions?: LaunchOptions;
+  defaultTimeout?: number;  // tempo em segundos
 }

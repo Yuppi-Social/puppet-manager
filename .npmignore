@@ -1,0 +1,13 @@
+devDoc
+node_modules
+bun.lock
+tsconfig.json
+tsup.config.ts
+src
+
+coverage
+.env
+.DS_Store
+.vscode
+.idea
+*.log

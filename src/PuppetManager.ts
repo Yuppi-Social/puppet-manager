@@ -1,5 +1,5 @@
 import puppeteer, { Browser } from 'puppeteer';
-import type { BrowserManagerState, TimeoutCloserFn, TTLSubscriptionFn } from './types';
+import type { BrowserManagerState, TimeoutCloserFn, TTLSubscriptionFn, PuppetManagerOptions } from './types';
 import { BROWSER_LAUNCH_OPTIONS, DEFAULT_TTL_SECONDS } from './utils/constants';
 
 /**
@@ -11,17 +11,26 @@ export class PuppetManager implements BrowserManagerState {
   public timerId: ReturnType<typeof setInterval>[] = [];
   public timeToLive: number[] = [];
   private readonly timeoutCloser: TimeoutCloserFn;
+  private readonly options: PuppetManagerOptions;
 
-  constructor() {
+  constructor(options: PuppetManagerOptions = {}) {
+    this.options = options;
     this.timeoutCloser = this.createTimeoutCloser();
   }
 
   /**
    * Creates a new browser instance with automatic lifecycle management
+   * @param customOptions - Optional launch options for this specific browser instance
    * @returns Promise<number> - The browser instance ID
    */
-  async createBrowser(): Promise<number> {
-    const browser = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
+  async createBrowser(customOptions?: PuppetManagerOptions): Promise<number> {
+    const launchOptions = {
+      ...BROWSER_LAUNCH_OPTIONS,
+      ...this.options.browserOptions,
+      ...customOptions
+    };
+
+    const browser = await puppeteer.launch(launchOptions);
     this.browsers.push(browser);
     const bid = this.browsers.length - 1;
     this.refreshTTL(bid);
@@ -32,20 +41,47 @@ export class PuppetManager implements BrowserManagerState {
    * Creates a new page in the specified browser instance
    * @param bid - Browser instance ID
    * @returns Promise to the newly created page
-   * @throws Error if browser instance not found
+   * @throws {Error} If browser instance not found
+   * @throws {Error} If page creation fails
+   * @throws {Error} If browser has been disconnected
    */
   async createPage(bid: number) {
-    this.validateBrowserId(bid);
-    this.refreshTTL(bid);
-    return await this.browsers[bid]?.newPage();
+    try {
+      this.validateBrowserId(bid);
+      
+      const browser = this.browsers[bid];
+      if (!browser) {
+        throw new Error(`Browser instance ${bid} not found or was closed`);
+      }
+
+      // Verify if browser is still connected
+      if (!browser.connected) {
+        this.browsers[bid] = null;
+        throw new Error(`Browser instance ${bid} has been disconnected`);
+      }
+
+      this.refreshTTL(bid);
+      const page = await browser.newPage().catch(err => {
+        throw new Error(`Failed to create new page: ${err.message}`);
+      });
+
+      return page;
+
+    } catch (error) {
+      // Log the error for debugging
+      console.error(`[ERROR] PuppetManager.createPage: ${(error as Error).message}`);
+      throw error;
+    }
   }
 
   /**
    * Refreshes the time-to-live for a browser instance
    * @param bid - Browser instance ID
+   * @param timeout - Optional custom timeout in seconds
    */
-  refreshTTL(bid: number): void {
-    this.timeoutCloser(DEFAULT_TTL_SECONDS, bid);
+  refreshTTL(bid: number, timeout?: number): void {
+    const ttl = timeout ?? this.options.defaultTimeout ?? DEFAULT_TTL_SECONDS;
+    this.timeoutCloser(ttl, bid);
   }
 
   /**

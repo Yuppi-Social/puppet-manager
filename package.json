@@ -1,6 +1,6 @@
 {
-  "name": "puppanel",
-  "version": "1.0.0",
+  "name": "@dark1zinn/puppanel",
+  "version": "1.7.0",
   "description": "A simplified Puppeteer management interface",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,11 +8,21 @@
   "files": [
     "dist"
   ],
-  "scripts": {
-    "build": "tsc",
-    "test": "jest",
-    "prepare": "npm run build"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dark1zinn/puppanel.git"
   },
+"scripts": {
+  "build": "tsup",
+  "test": "jest",
+  "load-env": "node -r dotenv/config -e \"console.log('Environment variables loaded from .env')\"",
+  "publish:npm": "bun run build && bun run load-env && npm publish",
+  "publish:github": "bun run build && bun run load-env && npm publish --registry https://npm.pkg.github.com",
+  "publish:all": "bun run publish:npm && bun run publish:github"
+},
+"publishConfig": {
+  "registry": "https://registry.npmjs.org/"
+},
   "keywords": [
     "puppeteer",
     "automation",
@@ -27,8 +37,10 @@
   "devDependencies": {
     "@types/jest": "^29.5.0",
     "@types/node": "^18.0.0",
+    "dotenv": "^16.4.7",
     "jest": "^29.5.0",
     "ts-jest": "^29.1.0",
+    "tsup": "^8.4.0",
     "typescript": "^5.0.0"
   },
   "dependencies": {
