@@ -16,7 +16,7 @@
   "build": "tsup",
   "test": "jest",
   "load-env": "node -r dotenv/config -e \"console.log('Environment variables loaded from .env')\"",
-  "publish:npm": "bun run build && bun run load-env && npm publish",
+  "publish:npm": "bun run build && bun run load-env && npm publish --access public",
   "publish:github": "bun run build && bun run load-env && npm publish --registry https://npm.pkg.github.com",
   "publish:all": "bun run publish:npm && bun run publish:github"
 },
