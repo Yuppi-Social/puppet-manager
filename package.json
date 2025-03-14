@@ -1,5 +1,5 @@
 {
-  "name": "@yuppi-social/puppanel",
+  "name": "@yuppi-social/puppet-manager",
   "version": "1.7.0",
   "description": "A simplified Puppeteer management interface",
   "main": "dist/index.js",
