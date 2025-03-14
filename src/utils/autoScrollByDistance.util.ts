@@ -8,7 +8,7 @@ import type { Page } from "puppeteer";
  * @param {number} distance - The distance in pixels to scroll by on each interval.
  * @returns {Promise<void>} A promise that resolves when the bottom of the page is reached.
  */
-export default async function autoScrollByDistance(page: Page, distance: number) {
+export async function autoScrollByDistance(page: Page, distance: number) {
     await page.evaluate(async (distance) => {
         await new Promise<void>((resolve) => {
             let totalHeight = 0;

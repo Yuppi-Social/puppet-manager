@@ -7,7 +7,7 @@ import type { Page } from "puppeteer";
  * @param {string} selector - The CSS selector of the element to scroll to.
  * @returns {Promise<void>} A promise that resolves when the element is in view or the bottom of the page is reached.
  */
-export default async function autoScrollUntilElement(page: Page, selector: string) {
+export async function autoScrollUntilElement(page: Page, selector: string) {
     await page.evaluate(async (selector) => {
         await new Promise<void>((resolve) => {
             let totalHeight = 0;

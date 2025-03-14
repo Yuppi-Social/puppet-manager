@@ -6,7 +6,7 @@ import { Page } from "puppeteer";
  * @param page - The Puppeteer Page object representing the web page to scroll.
  * @returns A promise that resolves once the page has been scrolled to the bottom.
  */
-export default async function autoScrollToBottom(page: Page) {
+export async function autoScrollToBottom(page: Page) {
     await page.evaluate(async () => {
         await new Promise<void>((resolve) => {
             let totalHeight = 0;

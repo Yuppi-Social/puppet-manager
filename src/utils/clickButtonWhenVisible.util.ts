@@ -11,7 +11,7 @@ import type { Page } from "puppeteer";
  * @returns A promise that resolves when the button has been clicked.
  * @throws Will throw an error if the button cannot be clicked.
  */
-export default async function clickButtonWhenVisible(page: Page, buttonSelector: string): Promise<void> {
+export async function clickButtonWhenVisible(page: Page, buttonSelector: string): Promise<void> {
     try {
         await page.waitForSelector(buttonSelector, { visible: true });
 

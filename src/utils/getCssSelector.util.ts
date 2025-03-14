@@ -9,7 +9,7 @@ import type { Page } from "puppeteer";
  * @returns {Promise<string>} A promise that resolves to the CSS selector path of the element.
  * @throws {Error} If an error occurs while evaluating the selector path.
  */
-export default async function getCssSelector(page: Page, element: any) {
+export async function getCssSelector(page: Page, element: any) {
     let selector
 
     try {
