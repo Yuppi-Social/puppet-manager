@@ -10,7 +10,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dark1zinn/puppanel.git"
+    "url": "git+https://github.com/dark1zinn/puppet-manager.git"
   },
 "scripts": {
   "build": "tsup",
