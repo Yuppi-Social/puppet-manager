@@ -1,5 +1,5 @@
 {
-  "name": "@dark1zinn/puppanel",
+  "name": "@dark1zinn/puppet-manager",
   "version": "1.7.0",
   "description": "A simplified Puppeteer management interface",
   "main": "dist/index.js",
@@ -26,8 +26,7 @@
   "keywords": [
     "puppeteer",
     "automation",
-    "browser",
-    "testing"
+    "browser"
   ],
   "author": {
     "name": "dark1zinn",
