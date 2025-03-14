@@ -1,5 +1,5 @@
 {
-  "name": "@dark1zinn/puppanel",
+  "name": "@yuppi-social/puppanel",
   "version": "1.7.0",
   "description": "A simplified Puppeteer management interface",
   "main": "dist/index.js",
@@ -10,18 +10,16 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dark1zinn/puppanel.git"
+    "url": "git+https://github.com/Yuppi-Social/puppanel.git"
   },
 "scripts": {
   "build": "tsup",
   "test": "jest",
   "load-env": "node -r dotenv/config -e \"console.log('Environment variables loaded from .env')\"",
-  "publish:npm": "bun run build && bun run load-env && npm publish",
-  "publish:github": "bun run build && bun run load-env && npm publish --registry https://npm.pkg.github.com",
-  "publish:all": "bun run publish:npm && bun run publish:github"
+  "publish": "bun run build && npm run load-env && npm publish"
 },
 "publishConfig": {
-  "registry": "https://registry.npmjs.org/"
+  "registry": "https://npm.pkg.github.com"
 },
   "keywords": [
     "puppeteer",
