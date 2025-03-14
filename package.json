@@ -1,6 +1,6 @@
 {
   "name": "@yuppi-social/puppet-manager",
-  "version": "1.7.0",
+  "version": "1.7.3",
   "description": "A simplified Puppeteer management interface",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
