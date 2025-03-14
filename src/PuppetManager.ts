@@ -1,6 +1,6 @@
 import puppeteer, { Browser } from 'puppeteer';
 import type { BrowserManagerState, TimeoutCloserFn, TTLSubscriptionFn, PuppetManagerOptions } from './types';
-import { BROWSER_LAUNCH_OPTIONS, DEFAULT_TTL_SECONDS } from './utils/constants';
+import { BROWSER_LAUNCH_OPTIONS, DEFAULT_TTL_SECONDS } from './utils';
 
 /**
  * PuppetManager provides a high-level interface for managing Puppeteer browser instances
