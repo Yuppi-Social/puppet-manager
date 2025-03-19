@@ -1,4 +1,4 @@
-# puppanel
+# puppet-manager
 
 ## 📚 Documentation
 

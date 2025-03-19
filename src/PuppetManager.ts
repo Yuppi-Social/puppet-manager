@@ -179,3 +179,5 @@ export class PuppetManager implements BrowserManagerState {
     }
   }
 }
+
+// TODO: create a method to get a browser by its ID

@@ -46,7 +46,9 @@ describe('PuppetManager E2E', () => {
         expect(title1).toBe('Example Domain');
         expect(title2).toBe('Example Domain');
     }, 30000);
-
+    
+    // TODO: This test is having some unexpected behavior as the first expect must always be true which is mean and the second must be benchmarked, it should be fixed
+    //* Not really a problem for now but must check later using benchs to make sure this isnt a inconsistency
     it('should properly handle timeouts', async () => {
         const bid = await manager.createBrowser();
         let isTimeout = false;
@@ -60,7 +62,7 @@ describe('PuppetManager E2E', () => {
         
         await new Promise(resolve => setTimeout(resolve, 3000));
         
-        expect(isTimeout).toBe(true);
+        expect(isTimeout).toBe(true);   
         // await new Promise(resolve => setTimeout(resolve, 1500));
         expect(manager.browsers[bid]).toBeNull();
     }, 10000);
