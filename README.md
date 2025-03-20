@@ -13,11 +13,13 @@ Welcome to Puppanel - A simplified Puppeteer management interface! 🚀
 ### 📥 Installation
 
 ```bash
-npm install puppanel
+bun install @dark1zinn/puppet-manager
 # or
-yarn add puppanel
+npm install @dark1zinn/puppet-manager
 # or
-pnpm add puppanel
+yarn add @dark1zinn/puppet-manager
+# or
+pnpm add @dark1zinn/puppet-manager
 ```
 
 ### 🚀 Quick Start
