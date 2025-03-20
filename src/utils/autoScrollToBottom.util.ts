@@ -8,11 +8,11 @@ import { Page } from "puppeteer";
  * @param interval - Interval in miliseconds between each scroll
  * @returns A promise that resolves once the page has been scrolled to the bottom.
  */
-export async function autoScrollToBottom(page: Page, pixelsDistance: number = 300, interval: number = 100) {
-    await page.evaluate(async () => {
+export async function autoScrollToBottom(page: Page, pixelsDistance: number = 300, intervalMs: number = 100) {
+    await page.evaluate(async (pixels, interval) => {
         await new Promise<void>((resolve) => {
             let totalHeight = 0;
-            let distance = pixelsDistance;
+            let distance = pixels;
             let timer = setInterval(() => {
                 let scrollHeight = document.body.scrollHeight;
                 window.scrollBy(0, distance);
@@ -24,5 +24,5 @@ export async function autoScrollToBottom(page: Page, pixelsDistance: number = 30
                 }
             }, interval);
         });
-    });
+    }, pixelsDistance, intervalMs);
 }
