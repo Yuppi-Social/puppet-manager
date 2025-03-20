@@ -13,5 +13,5 @@ export interface BrowserManagerState {
 
 export interface PuppetManagerOptions {
   browserOptions?: LaunchOptions;
-  defaultTimeout?: number;  // tempo em segundos
+  defaultTimeout?: number;
 }
