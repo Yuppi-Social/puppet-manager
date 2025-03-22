@@ -1,7 +1,11 @@
 import { PuppetManager } from '../../src/PuppetManager';
 import puppeteer from 'puppeteer';
+import { randomUUID } from 'crypto';
 
 jest.mock('puppeteer');
+jest.mock('crypto', () => ({
+    randomUUID: jest.fn(),
+}));
 
 describe('PuppetManager', () => {
     let manager: PuppetManager;
@@ -14,11 +18,13 @@ describe('PuppetManager', () => {
         goto: jest.fn(),
         close: jest.fn(),
     };
+    const mockUUID = '123e4567-e89b-12d3-a456-426614174000';
 
     beforeEach(() => {
         jest.clearAllMocks();
         (puppeteer.launch as jest.Mock).mockResolvedValue(mockBrowser);
         mockBrowser.newPage.mockResolvedValue(mockPage);
+        (randomUUID as jest.Mock).mockReturnValue(mockUUID);
         manager = new PuppetManager();
     });
 
@@ -27,17 +33,17 @@ describe('PuppetManager', () => {
     });
 
     describe('createBrowser', () => {
-        it('should create a new browser instance', async () => {
+        it('should create a browser instance', async () => {
             const bid = await manager.createBrowser();
-            expect(bid).toBe(0);
+            expect(bid).toBe(mockUUID);
             expect(puppeteer.launch).toHaveBeenCalled();
         });
 
-        it('should create multiple browser instances with different IDs', async () => {
-            const bid1 = await manager.createBrowser();
-            const bid2 = await manager.createBrowser();
-            expect(bid1).toBe(0);
-            expect(bid2).toBe(1);
+        it('should throw error when trying to create second instance', async () => {
+            await manager.createBrowser();
+            await expect(manager.createBrowser()).rejects.toThrow(
+                'Browser already created'
+            );
         });
     });
 
@@ -50,7 +56,9 @@ describe('PuppetManager', () => {
         });
 
         it('should throw error for invalid browser ID', async () => {
-            await expect(manager.createPage(999)).rejects.toThrow();
+            const invalidUUID = 'invalid-uuid';
+            // @ts-ignore
+            await expect(manager.createPage(invalidUUID)).rejects.toThrow();
         });
     });
 
@@ -58,13 +66,13 @@ describe('PuppetManager', () => {
         it('should update TTL for browser instance', async () => {
             const bid = await manager.createBrowser();
             manager.refreshTTL(bid, 120);
-            expect(manager.timeToLive[bid]).toBe(120);
+            expect(manager.browser.timeToLive).toBe(120);
         });
 
         it('should use default TTL when no timeout specified', async () => {
             const bid = await manager.createBrowser();
             manager.refreshTTL(bid);
-            expect(manager.timeToLive[bid]).toBe(60);
+            expect(manager.browser.timeToLive).toBe(60);
         });
     });
 
@@ -73,17 +81,19 @@ describe('PuppetManager', () => {
             const bid = await manager.createBrowser();
             await manager.destroyBrowser(bid);
             expect(mockBrowser.close).toHaveBeenCalled();
-            expect(manager.browsers[bid]).toBeNull();
+            expect(manager.browser.instance).toBeNull();
         });
     });
 
     describe('cleanup', () => {
-        it('should close all browser instances', async () => {
-            await manager.createBrowser();
+        it('should close browser instance and reset state', async () => {
             await manager.createBrowser();
             await manager.cleanup();
-            expect(mockBrowser.close).toHaveBeenCalledTimes(2);
-            expect(manager.browsers).toHaveLength(0);
+            expect(mockBrowser.close).toHaveBeenCalled();
+            expect(manager.browser.instance).toBeNull();
+            expect(manager.browser.browserId).toBeNull();
+            expect(manager.browser.timerId).toBeNull();
+            expect(manager.browser.timeToLive).toBeNull();
         });
     });
 
@@ -92,12 +102,25 @@ describe('PuppetManager', () => {
             const bid = await manager.createBrowser();
             const mockCallback = jest.fn();
             const unsubscribe = manager.subscribeTTL(bid, mockCallback);
-            
-            // Wait for one tick
-            await new Promise(resolve => setTimeout(resolve, 1100));
-            
+
+            await new Promise((resolve) => setTimeout(resolve, 1100));
+
             expect(mockCallback).toHaveBeenCalled();
             unsubscribe();
+        });
+    });
+
+    describe('getBrowser', () => {
+        it('should return browser instance for valid ID', async () => {
+            const bid = await manager.createBrowser();
+            const browser = manager.getBrowser(bid);
+            expect(browser).toBe(mockBrowser);
+        });
+
+        it('should throw error for invalid ID', async () => {
+            const invalidUUID = 'invalid-uuid';
+            // @ts-ignore
+            expect(() => manager.getBrowser(invalidUUID)).toThrow();
         });
     });
 });
