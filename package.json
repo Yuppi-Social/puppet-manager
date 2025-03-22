@@ -1,6 +1,6 @@
 {
   "name": "@dark1zinn/puppet-manager",
-  "version": "1.7.42",
+  "version": "1.7.6",
   "description": "A simplified Puppeteer management interface",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
